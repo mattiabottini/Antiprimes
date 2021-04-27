@@ -13,14 +13,21 @@ public class AntiPrimesSequence {
      * The numbers in the sequence.
      */
     private List<Number> antiPrimes = new ArrayList<>();
-
+    private NumberProcessor processor;
+    private List <Observer> observers = new ArrayList<>();
     /**
      * Create a new sequence containing only the first antiprime (the number '1').
      */
     public AntiPrimesSequence() {
+        processor = new NumberProcessor(this);
         this.reset();
+        processor.start();
     }
 
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);//viene chiamato nella classe di Run ma compromette solo la stampa grafica
+    }
     /**
      * Clear the sequence so that it contains only the first antiprime (the number '1').
      */
@@ -32,8 +39,21 @@ public class AntiPrimesSequence {
     /**
      * Find a new antiprime and add it to the sequence.
      */
+    synchronized public void addAntiPrime(Number number) {
+        antiPrimes.add(number);
+        for (Observer observer : observers)
+            observer.update();
+    }
+
+    /**
+     * Find a new antiprime and add it to the sequence.
+     */
     public void computeNext() {
-        antiPrimes.add(AntiPrimes.nextAntiPrimeAfter(getLast()));
+        try {
+            processor.nextAntiPrime(getLast()); //processor è del tipo 'Number Processor'
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
