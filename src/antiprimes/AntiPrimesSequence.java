@@ -21,7 +21,7 @@ public class AntiPrimesSequence {
     public AntiPrimesSequence() {
         processor = new NumberProcessor(this);
         this.reset();
-        processor.start();
+        processor.start(); //SI
     }
 
 
